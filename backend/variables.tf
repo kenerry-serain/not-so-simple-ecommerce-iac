@@ -9,8 +9,8 @@ variable "assume_role" {
   })
 
   default = {
-    role_arn    = "arn:aws:iam::968225077300:role/terraform-role"
-    external_id = "183f7a68-72a9-11ee-b962-0242ac120002"
+    role_arn    = "arn:aws:iam::<YOUR-ACCOUNT-ID>:role/terraform-role"
+    external_id = "<YOUR-EXTERNAL-ID>"
   }
 }
 
