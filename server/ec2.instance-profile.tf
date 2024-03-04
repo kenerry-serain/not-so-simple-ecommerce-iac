@@ -10,6 +10,7 @@ data "aws_iam_policy_document" "assume_role" {
     actions = ["sts:AssumeRole"]
   }
 }
+
 resource "aws_iam_role" "instance_role" {
   name               = var.ec2_resources.instance_role
   managed_policy_arns = [
@@ -17,6 +18,7 @@ resource "aws_iam_role" "instance_role" {
   ]
   assume_role_policy = data.aws_iam_policy_document.assume_role.json
 }
+
 resource "aws_iam_instance_profile" "instance_profile" {
   name = var.ec2_resources.instance_profile
   role = aws_iam_role.instance_role.name
