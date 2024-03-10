@@ -9,3 +9,7 @@ output "queues_urls" {
 output "sns_topic_arn" {
   value = aws_sns_topic.order_confirmed_topic.id
 }
+
+output "s3_application_bucket_arn" {
+  value = aws_s3_bucket.nsse.arn
+}
