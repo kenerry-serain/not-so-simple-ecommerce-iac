@@ -115,6 +115,88 @@ variable "order_confirmed_topic" {
 }
 
 variable "s3_application_bucket_name" {
-  type = string
+  type    = string
   default = "nsse-application-bucket"
+}
+
+variable "vpc_resources" {
+  type = object({
+    vpc = string
+  })
+
+  default = {
+    vpc = "nsse-production-vpc"
+  }
+}
+
+variable "security_groups" {
+  type = object({
+    rds           = string,
+    control_plane = string,
+    worker        = string,
+  })
+
+  default = {
+    rds           = "nsse-production-rds-security-group"
+    control_plane = "nsse-production-control-plane-security-group"
+    worker        = "nsse-production-worker-security-group"
+  }
+}
+
+variable "rds_aurora_cluster" {
+  type = object({
+    cluster_identifier           = string
+    engine                       = string
+    engine_mode                  = string
+    database_name                = string
+    master_username              = string
+    final_snapshot_identifier    = string
+    preferred_maintenance_window = string
+    availability_zones           = list(string)
+    deletion_protection          = bool
+    manage_master_user_password  = bool
+    storage_encrypted            = bool,
+    instances = list(object({
+      instance_class    = string
+      identifier        = string
+      availability_zone = string
+    }))
+    serverless_scaling_configuration = object({
+      max_capacity = number
+      min_capacity = number
+    })
+  })
+
+  default = {
+    cluster_identifier           = "nsse-aurora-serverless-cluster"
+    engine                       = "aurora-postgresql"
+    engine_mode                  = "provisioned"
+    database_name                = "notSoSimpleEcommerce"
+    master_username              = "nsseAdmin"
+    final_snapshot_identifier    = "nsse-aurora-serverless-cluster-final-snapshot"
+    preferred_maintenance_window = "sun:05:00-sun:06:00"
+    availability_zones           = ["us-east-1a", "us-east-1b","us-east-1c"]
+    deletion_protection          = true
+    manage_master_user_password  = true
+    storage_encrypted            = true
+    instances = [{
+      instance_class    = "db.serverless"
+      identifier        = "nsse-instance-us-east-1a"
+      availability_zone = "us-east-1a"
+      },
+      {
+        instance_class    = "db.serverless"
+        identifier        = "nsse-instance-us-east-1b"
+        availability_zone = "us-east-1b"
+    }]
+    serverless_scaling_configuration = {
+      max_capacity = 1.0
+      min_capacity = 0.5
+    }
+  }
+}
+
+variable "db_subnet_group" {
+  type    = string
+  default = "nsse-production-db-subnet-group"
 }

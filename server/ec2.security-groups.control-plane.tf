@@ -1,6 +1,6 @@
 resource "aws_security_group" "control_plane" {
   name        = var.ec2_resources.control_plane_security_group
-  description = "Allow SSH inbound traffic"
+  description = "Managing ports for control plane nodes"
   vpc_id      = data.aws_vpc.this.id
 
   egress {
