@@ -3,15 +3,13 @@ resource "aws_security_group" "postgresql" {
   description = "Managing ports for RDS"
   vpc_id      = data.aws_vpc.this.id
 
-  ingress {
+
+ ingress {
     from_port = 0
     to_port   = 0
     protocol  = "-1"
-    security_groups = [
-      data.aws_security_group.control_plane.id,
-    ]
+    self      = true
   }
-
   ingress {
     from_port = 0
     to_port   = 0
@@ -21,6 +19,14 @@ resource "aws_security_group" "postgresql" {
     ]
   }
 
+    ingress {
+    from_port = 0
+    to_port   = 0
+    protocol  = "-1"
+    security_groups = [
+      data.aws_security_group.control_plane.id,
+    ]
+  }
   egress {
     from_port        = 0
     to_port          = 0
@@ -29,5 +35,7 @@ resource "aws_security_group" "postgresql" {
     ipv6_cidr_blocks = ["::/0"]
   }
 
-  tags = var.tags
+  tags = merge(var.tags, {
+    Name = var.security_groups.rds
+  }) 
 }

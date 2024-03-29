@@ -146,6 +146,7 @@ variable "security_groups" {
 variable "rds_aurora_cluster" {
   type = object({
     cluster_identifier           = string
+    secret                       = string
     engine                       = string
     engine_mode                  = string
     database_name                = string
@@ -154,8 +155,8 @@ variable "rds_aurora_cluster" {
     preferred_maintenance_window = string
     availability_zones           = list(string)
     deletion_protection          = bool
+    storage_encrypted            = bool
     manage_master_user_password  = bool
-    storage_encrypted            = bool,
     instances = list(object({
       instance_class    = string
       identifier        = string
@@ -169,16 +170,17 @@ variable "rds_aurora_cluster" {
 
   default = {
     cluster_identifier           = "nsse-aurora-serverless-cluster"
+    secret                       = "nsse-aurora-serverless-cluster-secret"
     engine                       = "aurora-postgresql"
     engine_mode                  = "provisioned"
     database_name                = "notSoSimpleEcommerce"
     master_username              = "nsseAdmin"
     final_snapshot_identifier    = "nsse-aurora-serverless-cluster-final-snapshot"
     preferred_maintenance_window = "sun:05:00-sun:06:00"
-    availability_zones           = ["us-east-1a", "us-east-1b","us-east-1c"]
-    deletion_protection          = true
-    manage_master_user_password  = true
+    availability_zones           = ["us-east-1a", "us-east-1b"]
+    deletion_protection          = false
     storage_encrypted            = true
+    manage_master_user_password  = true
     instances = [{
       instance_class    = "db.serverless"
       identifier        = "nsse-instance-us-east-1a"
@@ -199,4 +201,36 @@ variable "rds_aurora_cluster" {
 variable "db_subnet_group" {
   type    = string
   default = "nsse-production-db-subnet-group"
+}
+
+variable "rds_proxy" {
+  type = object({
+    name                = string
+    read_only_endpoint  = string
+    debug_logging       = bool
+    engine_family       = string
+    idle_client_timeout = number
+    require_tls         = bool
+    role_name           = string
+    policy_name         = string
+    auth = object({
+      auth_scheme = string
+      iam_auth    = string
+    })
+  })
+
+  default = {
+    name                = "nsse-aurora-serverless-cluster-proxy"
+    read_only_endpoint  = "nsse-aurora-serverless-cluster-proxy-readonly"
+    debug_logging       = false
+    engine_family       = "POSTGRESQL"
+    idle_client_timeout = 300
+    require_tls         = true
+    role_name           = "nsse-production-rds-proxy-role"
+    policy_name         = "nsse-production-rds-proxy-policy"
+    auth = {
+      auth_scheme = "SECRETS"
+      iam_auth    = "DISABLED"
+    }
+  }
 }

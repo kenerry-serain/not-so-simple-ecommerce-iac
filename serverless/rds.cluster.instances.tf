@@ -6,4 +6,5 @@ resource "aws_rds_cluster_instance" "this" {
   identifier         = var.rds_aurora_cluster.instances[count.index].identifier
   engine             = aws_rds_cluster.this.engine
   engine_version     = aws_rds_cluster.this.engine_version
+  tags               = var.tags
 }
