@@ -280,3 +280,8 @@ variable "lambda_layer_node_modules" {
     compatible_runtimes = ["nodejs18.x"]
   }
 }
+
+variable "domain" {
+  type = string
+  default = "devopsnanuvem.com"
+}
