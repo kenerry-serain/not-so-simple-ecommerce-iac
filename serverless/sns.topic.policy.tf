@@ -8,7 +8,7 @@ data "aws_iam_policy_document" "sns_policy" {
     }
 
     resources = ["*"]
-    
+
     actions = [
       "sns:Publish",
       "sns:RemovePermission",

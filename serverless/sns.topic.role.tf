@@ -12,7 +12,7 @@ data "aws_iam_policy_document" "sns_trust_policy" {
 }
 
 resource "aws_iam_role" "sns_topic_role" {
-  name               = var.order_confirmed_topic.role_name
+  name = var.order_confirmed_topic.role_name
   managed_policy_arns = [
     "arn:aws:iam::aws:policy/service-role/AmazonSNSRole"
   ]
