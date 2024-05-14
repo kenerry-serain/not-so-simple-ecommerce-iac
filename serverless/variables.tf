@@ -21,8 +21,8 @@ variable "assume_role" {
   })
 
   default = {
-    role_arn    = "arn:aws:iam::968225077300:role/terraform-role"
-    external_id = "b13a2355-fffa-4c74-a5c1-5869e1e6b2d9"
+    role_arn    = ""
+    external_id = ""
   }
 }
 
@@ -261,6 +261,34 @@ variable "lambda_order_confirmed" {
   }
 }
 
+variable "lambda_report_job" {
+  type = object({
+    timeout       = number
+    package_type  = string
+    source_dir    = string
+    output_path   = string
+    filename      = string
+    function_name = string
+    handler       = string
+    runtime       = string
+    role_name     = string
+    policy_name   = string
+  })
+
+  default = {
+    timeout       = 30
+    package_type  = "zip"
+    source_dir    = "lambdas/report-job/build"
+    output_path   = "lambdas/report-job/outputs/package.zip"
+    filename      = "lambdas/report-job/outputs/package.zip"
+    function_name = "reportJobLambdaFunction"
+    handler       = "index.handler"
+    runtime       = "nodejs18.x"
+    role_name     = "nsse-production-report-job-lambda-role"
+    policy_name   = "nsse-production-report-job-lambda-policy"
+  }
+}
+
 variable "lambda_layer_node_modules" {
   type = object({
     package_type        = string
@@ -272,16 +300,70 @@ variable "lambda_layer_node_modules" {
   })
 
   default = {
-    package_type = "zip"
-    source_dir = "lambdas/layers/dependencies"
-    output_path = "lambdas/order-confirmed/outputs/node_modules_layer.zip"
-    filename = "lambdas/order-confirmed/outputs/node_modules_layer.zip"
-    layer_name = "node_modules"
+    package_type        = "zip"
+    source_dir          = "lambdas/layers/dependencies"
+    output_path         = "lambdas/layers/outputs/node_modules_layer.zip"
+    filename            = "lambdas/layers/outputs/node_modules_layer.zip"
+    layer_name          = "node_modules"
     compatible_runtimes = ["nodejs18.x"]
   }
 }
 
 variable "domain" {
-  type = string
+  type    = string
   default = "devopsnanuvem.com"
+}
+
+variable "document_db_cluster" {
+  type = object({
+    cluster_identifier              = string
+    database_name                   = string
+    s3_certificate_path             = string
+    engine                          = string
+    master_username                 = string
+    backup_retention_period         = number
+    preferred_backup_window         = string
+    preferred_maintenance_window    = string
+    final_snapshot_identifier       = string
+    storage_encrypted               = bool
+    availability_zones              = list(string)
+    enabled_cloudwatch_logs_exports = list(string)
+    subnet_group_name               = string
+    secret_name                     = string
+    instance_class                  = string
+    instance_identifier             = string
+    security_group_name             = string
+    parameter_group = object({
+      family     = string
+      name       = string
+      audit_logs = string
+      profiler   = string
+    })
+  })
+
+  default = {
+    cluster_identifier              = "nsse-documentdb-cluster"
+    database_name                   = "notSoSimpleEcommerce"
+    s3_certificate_path             = "app/documentdb-ca.pem"
+    engine                          = "docdb"
+    master_username                 = "nsse"
+    backup_retention_period         = 7
+    preferred_backup_window         = "01:00-02:00"
+    preferred_maintenance_window    = "sun:03:00-sun:04:00"
+    final_snapshot_identifier       = "nsse-documentdb-cluster-final-snapshot"
+    storage_encrypted               = true
+    availability_zones              = ["us-east-1a", "us-east-1b"]
+    enabled_cloudwatch_logs_exports = ["audit", "profiler"]
+    subnet_group_name               = "nsse-documentdb-subnet-group"
+    secret_name                     = "nsse-documentdb-secre-1"
+    instance_class                  = "db.t3.medium"
+    instance_identifier             = "nsse-document-db-cluster-single-instance"
+    security_group_name             = "nsse-documentdb-security-group"
+    parameter_group = {
+      family     = "docdb5.0"
+      name       = "nsse-documentdb-parameter-group"
+      audit_logs = "enabled"
+      profiler   = "enabled"
+    }
+  }
 }
