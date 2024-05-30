@@ -9,14 +9,14 @@ variable "assume_role" {
   })
 
   default = {
-    role_arn    = "arn:aws:iam::968225077300:role/terraform-role"
-    external_id = "b13a2355-fffa-4c74-a5c1-5869e1e6b2d9"
+    role_arn    = "arn:aws:iam::654654554686:role/terraform-role"
+    external_id = "7cacab4d-c52c-473c-8db2-883391bc030d"
   }
 }
 
 variable "s3_bucket" {
   type = string
-  default = "nsse-terraform-state-bucket"
+  default = "nsse-terraform-state-bucket-654654554686"
 }
 
 variable "dynamo_table" {

@@ -73,12 +73,12 @@ variable "control_plane_launch_template" {
     name                                 = "nsse-production-debian-control-plane-lt"
     disable_api_stop                     = true
     disable_api_termination              = true
-    instance_type                        = "t3.micro"
+    instance_type                        = "t3.medium"
     instance_initiated_shutdown_behavior = "terminate"
     user_data                            = "./cli/control-plane-user-data.sh"
     ebs = {
       size                  = 20
-      delete_on_termination = false
+      delete_on_termination = true
     }
   }
 }
@@ -106,7 +106,7 @@ variable "worker_launch_template" {
     user_data                            = "./cli/worker-user-data.sh"
     ebs = {
       size                  = 20
-      delete_on_termination = false
+      delete_on_termination = true
     }
   }
 }
@@ -275,4 +275,9 @@ variable "logs_bucket" {
     bucket = "nsse-production-logs"
     force_destroy = true
   }
+}
+
+variable "bucket_ssm" {
+  type = string
+  default = "not-so-simple-ecommerce-ansible-ssm"
 }
