@@ -21,8 +21,8 @@ variable "assume_role" {
   })
 
   default = {
-    role_arn    = ""
-    external_id = ""
+    role_arn    = "<YOUR_ROLE>"
+    external_id = "7cacab4d-c52c-473c-8db2-883391bc030d"
   }
 }
 
@@ -355,7 +355,7 @@ variable "document_db_cluster" {
     availability_zones              = ["us-east-1a", "us-east-1b"]
     enabled_cloudwatch_logs_exports = ["audit", "profiler"]
     subnet_group_name               = "nsse-documentdb-subnet-group"
-    secret_name                     = "nsse-documentdb-secre-1"
+    secret_name                     = "nsse-documentdb-secret"
     instance_class                  = "db.t3.medium"
     instance_identifier             = "nsse-document-db-cluster-single-instance"
     security_group_name             = "nsse-documentdb-security-group"
@@ -365,5 +365,25 @@ variable "document_db_cluster" {
       audit_logs = "enabled"
       profiler   = "enabled"
     }
+  }
+}
+
+variable "event_bridge_scheduler_lambda_report_job" {
+  type = object({
+    schedule_name                 = string
+    schedule_group_name           = string
+    schedule_flexible_time_window = string
+    schedule_expression           = string
+    role_name                     = string
+    policy_name                   = string
+  })
+
+  default = {
+    schedule_name                 = "lambda-report-schedule"
+    schedule_group_name           = "default"
+    schedule_flexible_time_window = "OFF"
+    schedule_expression           = "rate(1 minutes)"
+    role_name                     = "nsse-production-eb-scheduler-role"
+    policy_name                   = "nsse-production-invoke-lambda-policy"
   }
 }

@@ -32,8 +32,8 @@ variable "assume_role" {
   })
 
   default = {
-    role_arn    = "arn:aws:iam::968225077300:role/terraform-role"
-    external_id = "b13a2355-fffa-4c74-a5c1-5869e1e6b2d9"
+    role_arn    = "<YOUR_ROLE>"
+    external_id = "7cacab4d-c52c-473c-8db2-883391bc030d"
   }
 }
 
@@ -130,9 +130,9 @@ variable "control_plane_auto_scaling_group" {
 
   default = {
     name                      = "nsse-production-control-plane-asg"
-    max_size                  = 1
-    min_size                  = 1
-    desired_capacity          = 1
+    max_size                  = 3
+    min_size                  = 3
+    desired_capacity          = 3
     health_check_grace_period = 180
     health_check_type         = "EC2"
     instance_tags = {
@@ -164,9 +164,9 @@ variable "worker_auto_scaling_group" {
 
   default = {
     name                      = "nsse-production-worker-asg"
-    max_size                  = 1
-    min_size                  = 1
-    desired_capacity          = 1
+    max_size                  = 2
+    min_size                  = 2
+    desired_capacity          = 2
     health_check_grace_period = 180
     health_check_type         = "EC2"
     instance_tags = {

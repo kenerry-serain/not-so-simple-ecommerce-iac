@@ -1,0 +1,6 @@
+---
+- name: Creating Kube Adm Kubernetes Cluster
+  hosts: aws_ec2
+  become: true
+  roles:
+    - dependency-packages
