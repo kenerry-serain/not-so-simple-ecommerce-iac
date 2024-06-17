@@ -1,0 +1,4 @@
+---
+- include_tasks: repository.yml
+- include_tasks: install.yml
+- include_tasks: hold.yml

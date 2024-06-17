@@ -4,3 +4,5 @@
   become: true
   roles:
     - dependency-packages
+    - kube-packages
+    - container-runtime

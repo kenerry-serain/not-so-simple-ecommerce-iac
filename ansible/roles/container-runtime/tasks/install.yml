@@ -1,0 +1,8 @@
+---
+- name: Install CRI-O
+  apt:
+    name:
+    - cri-o
+    state: present
+    update_cache: true
+  notify: Start CRI-O Service

@@ -1,9 +1,10 @@
 ---
 - name: Installing Dependency Packages
-  ansible.builtin.apt:
+  apt:
     name: 
       - apt-transport-https
       - ca-certificates 
       - curl 
       - gpg
-    update_cache: yes
+      - software-properties-common
+    update_cache: true

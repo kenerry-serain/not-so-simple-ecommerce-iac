@@ -1,0 +1,10 @@
+---
+- name: Adding Signing Key for CRI-O
+  apt_key:
+    url: https://pkgs.k8s.io/addons:/cri-o:/prerelease:/main/deb/Release.key
+    keyring: /etc/apt/keyrings/cri-o-apt-keyring.gpg
+    
+- name: Add CRI-O Repository
+  apt_repository:
+    repo: deb [signed-by=/etc/apt/keyrings/cri-o-apt-keyring.gpg] https://pkgs.k8s.io/addons:/cri-o:/prerelease:/main/deb/ /
+    state: present
