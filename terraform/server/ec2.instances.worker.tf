@@ -24,6 +24,7 @@ module "ec2_workers_instances" {
     health_check_grace_period = var.worker_auto_scaling_group.health_check_grace_period
     health_check_type         = var.worker_auto_scaling_group.health_check_type
     vpc_zone_identifier       = data.aws_subnets.private_subnets.ids
+    target_group_arns         = []
     instance_tags = merge(
       { PatchGroup = var.patch_group },
       var.tags,

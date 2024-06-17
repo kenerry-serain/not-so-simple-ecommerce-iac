@@ -235,7 +235,7 @@ variable "debian_production_association" {
     max_concurrency     = number
     max_errors          = number
     output_location = object({
-      s3_key_prefix  = string
+      s3_key_prefix = string
     })
     parameters = object({
       Operation    = string
@@ -267,17 +267,53 @@ variable "debian_production_association" {
 
 variable "logs_bucket" {
   type = object({
-    bucket = string
+    bucket        = string
     force_destroy = bool
   })
 
   default = {
-    bucket = "nsse-production-logs"
+    bucket        = "nsse-production-logs"
     force_destroy = true
   }
 }
 
 variable "bucket_ssm" {
-  type = string
+  type    = string
   default = "not-so-simple-ecommerce-ansible-ssm"
+}
+
+variable "network_load_balancer" {
+  type = object({
+    name               = string
+    internal           = bool
+    load_balancer_type = string
+    default_tg = object({
+      name        = string
+      target_type = string
+      port        = number
+      protocol    = string
+      preserve_client_ip = bool
+    })
+    default_listener = object({
+      port     = number
+      protocol = string
+    })
+  })
+
+  default = {
+    name               = "nsse-production-cp-nlb"
+    internal           = true
+    load_balancer_type = "network"
+    default_tg = {
+      name        = "nsse-production-cp-nlb-tcp-tg"
+      target_type = "instance"
+      port        = 6443
+      protocol    = "TCP"
+      preserve_client_ip = false
+    }
+    default_listener = {
+      port     = 6443
+      protocol = "TCP"
+    }
+  }
 }
