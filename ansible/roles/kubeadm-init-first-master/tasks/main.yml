@@ -1,0 +1,17 @@
+---
+- name: Creating Kube Adm Config File
+  vars:
+    terraform_outputs: "{{ lookup('file', '../../../terraform/server/outputs.json')}}"
+    nlb_dns_name: "{{ terraform_outputs.nlb_dns_name.value }}"
+  template: 
+    src: kubeadm.j2
+    dest: /home/admin/kubeadm.yml
+
+- name: Kube Adm Init
+  shell: | 
+    kubeadm init --config /home/admin/kubeadm.yml --upload-certs
+  register: kubeadm_init
+
+- name: Kube Adm Init (Output)
+  debug: 
+    var: kubeadm_init.stdout_lines

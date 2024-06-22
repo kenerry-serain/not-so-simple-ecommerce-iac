@@ -6,3 +6,9 @@
     - dependency-packages
     - kube-packages
     - container-runtime
+
+- name: Creating Kube Adm Kubernetes Cluster
+  hosts: control_planes[0]
+  become: true
+  roles:
+    - kubeadm-init-first-master
