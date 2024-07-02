@@ -1,11 +1,11 @@
 ---
-# - name: Creating Kube Adm Kubernetes Cluster
-#   hosts: aws_ec2
-#   become: true
-#   roles:
-#     - dependency-packages
-#     - kube-packages
-#     - container-runtime
+- name: Creating Kube Adm Kubernetes Cluster
+  hosts: aws_ec2
+  become: true
+  roles:
+    - dependency-packages
+    - kube-packages
+    - container-runtime
 
 - name: Init First Control Plane
   hosts: control_planes[0]
