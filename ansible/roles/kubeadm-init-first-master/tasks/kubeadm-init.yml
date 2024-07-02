@@ -1,0 +1,16 @@
+---
+- name: Uploading KubeAdm Init File
+  vars:
+    terraform_outputs: "{{ lookup('file', '{{terraform_path}}/server/outputs.json')}}"
+    nlb_dns_name: "{{ terraform_outputs.nlb_dns_name.value }}"
+  template:
+    src: kubeadm-init.j2
+    dest: /home/admin/kubeadm-init.yml
+
+- name: Running KubeAdm Init
+  shell: kubeadm reset --force && kubeadm init --config /home/admin/kubeadm-init.yml
+  register: kubeadm_init_output
+
+- name: Running KubeAdm Init (Output)
+  debug:
+    var: kubeadm_init_output

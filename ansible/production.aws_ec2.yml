@@ -1,6 +1,6 @@
 
 plugin: amazon.aws.aws_ec2
-profile: 654654554686_administrator
+profile: default
 regions:
   - us-east-1
 groups:

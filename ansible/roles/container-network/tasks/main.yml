@@ -1,0 +1,20 @@
+---
+- name: Installing Calico Operator
+  shell: kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/v3.28.0/manifests/tigera-operator.yaml
+
+- name: Downloading Calico Custom Resource
+  shell: curl -O https://raw.githubusercontent.com/projectcalico/calico/v3.28.0/manifests/custom-resources.yaml
+  args:
+    chdir: /home/admin
+
+- name: Replacing Pod Subnet for Calico
+  replace:
+    path: /home/admin/custom-resources.yaml
+    regexp: '192\.168\.0\.0\/16'
+    replace: '10.244.0.0/24'
+
+- name: Installing Calico Custom Resource
+  shell: |
+    kubectl create -f /home/admin/custom-resources.yaml
+
+  # sed -i 's/192.168.0.0\/16/10.244.0.0\/24/g' custom-resources.yaml
