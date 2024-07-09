@@ -7,11 +7,11 @@
     - kube-packages
     - container-runtime
 
-- name: Init First Control Plane
+- name: KubeAdm Init First Control Plpane
   hosts: control_planes[0]
   become: true
   environment:
-    KUBECONFIG: /etc/kubernetes/admin.conf
+    KUBECONFIG: "{{kube_config}}"
   roles:
     - kubeadm-init-first-master
     - container-network
