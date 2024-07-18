@@ -1,0 +1,8 @@
+---
+- name: Copy cluster-autoscaler to remote
+  copy:
+    src: resources.yml
+    dest: /home/admin/cluster-autoscaler.yml
+
+- name: Apply cluster-autoscaler
+  command: kubectl apply -f /home/admin/cluster-autoscaler.yml

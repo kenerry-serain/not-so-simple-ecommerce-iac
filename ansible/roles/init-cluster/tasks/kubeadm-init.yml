@@ -1,0 +1,9 @@
+---
+
+- name: KubeAdm Init
+  shell: kubeadm init --config /home/admin/kubeadm-init.yml
+  register: kubeadm_init_output
+
+- name: KubeAdm Init (Output)
+  debug:
+    var: kubeadm_init_output.stdout_lines

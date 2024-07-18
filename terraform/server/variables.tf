@@ -130,9 +130,9 @@ variable "control_plane_auto_scaling_group" {
 
   default = {
     name                      = "nsse-production-control-plane-asg"
-    max_size                  = 3
-    min_size                  = 3
-    desired_capacity          = 3
+    max_size                  = 2
+    min_size                  = 2
+    desired_capacity          = 2
     health_check_grace_period = 180
     health_check_type         = "EC2"
     instance_tags = {
@@ -288,10 +288,10 @@ variable "network_load_balancer" {
     internal           = bool
     load_balancer_type = string
     default_tg = object({
-      name        = string
-      target_type = string
-      port        = number
-      protocol    = string
+      name               = string
+      target_type        = string
+      port               = number
+      protocol           = string
       preserve_client_ip = bool
     })
     default_listener = object({
@@ -305,10 +305,10 @@ variable "network_load_balancer" {
     internal           = true
     load_balancer_type = "network"
     default_tg = {
-      name        = "nsse-production-cp-nlb-tcp-tg"
-      target_type = "instance"
-      port        = 6443
-      protocol    = "TCP"
+      name               = "nsse-production-cp-nlb-tcp-tg"
+      target_type        = "instance"
+      port               = 6443
+      protocol           = "TCP"
       preserve_client_ip = false
     }
     default_listener = {

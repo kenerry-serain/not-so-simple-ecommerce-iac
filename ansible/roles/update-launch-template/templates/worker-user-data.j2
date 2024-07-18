@@ -1,0 +1,76 @@
+#!/bin/bash
+function updateHostname(){
+  hostnamectl set-hostname $(curl -s http://169.254.169.254/latest/meta-data/local-hostname)
+}
+
+function installSystemsManagerAgentOnEc2(){
+
+    if [ ! -d "/tmp/ssm" ]; then
+        mkdir -p /tmp/ssm
+    fi
+
+    cd /tmp/ssm
+
+    if [ ! -f "amazon-ssm-agent.deb" ]; then
+        wget https://s3.amazonaws.com/ec2-downloads-windows/SSMAgent/latest/debian_amd64/amazon-ssm-agent.deb
+    fi
+
+    dpkg -i amazon-ssm-agent.deb
+}
+
+function installBasePackagesAndPrepareEnv(){
+  echo "Preparing Environment"
+  apt-get clean && apt-get update -y
+  apt-get install -y software-properties-common \
+    apt-transport-https \
+    ca-certificates \
+    curl \
+    gpg
+
+  if [ -f "/etc/apt/keyrings/kubernetes-apt-keyring.gpg" ]; then
+    rm /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+  fi
+
+   if [ -f "/etc/apt/keyrings/cri-o-apt-keyring.gpg" ]; then
+    rm /etc/apt/keyrings/cri-o-apt-keyring.gpg
+  fi
+
+  echo "Finished Environment Preparation"
+}
+
+function installKubernetesPackages(){
+  echo "Installing Kubernetes Packages"
+  curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.30/deb/Release.key | gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+  echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.30/deb/ /' | tee /etc/apt/sources.list.d/kubernetes.list
+
+  apt-get clean && apt-get update -y
+  apt-get install -y kubelet kubeadm kubectl
+  apt-mark hold kubelet kubeadm kubectl
+  echo "Finished Kubernetes Packages Installation"
+}
+
+function installAndConfigureCrio(){
+  echo "Installing CRIO"
+  curl -fsSL https://pkgs.k8s.io/addons:/cri-o:/stable:/v1.30/deb/Release.key | gpg --dearmor -o /etc/apt/keyrings/cri-o-apt-keyring.gpg
+  echo "deb [signed-by=/etc/apt/keyrings/cri-o-apt-keyring.gpg] https://pkgs.k8s.io/addons:/cri-o:/stable:/v1.30/deb/ /" | tee /etc/apt/sources.list.d/cri-o.list
+  apt-get clean && apt-get update -y
+  apt-get install -y cri-o
+
+  systemctl start crio.service
+  modprobe br_netfilter
+  sysctl -w net.ipv4.ip_forward=1
+  echo "Finished CRIO installation"
+}
+
+function joinWorkerNode(){
+  echo "Joining Worker Node to Cluster"
+  {{join_workers}}
+  echo "Joined Worker Node to Cluster"
+}
+
+updateHostname
+installSystemsManagerAgentOnEc2
+installBasePackagesAndPrepareEnv
+installKubernetesPackages
+installAndConfigureCrio
+joinWorkerNode

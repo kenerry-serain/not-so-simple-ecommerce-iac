@@ -6,12 +6,40 @@
     - dependency-packages
     - kube-packages
     - container-runtime
+    - hostname
 
-- name: KubeAdm Init First Control Plpane
+- name: Init Cluster
   hosts: control_planes[0]
   become: true
   environment:
     KUBECONFIG: "{{kube_config}}"
   roles:
-    - kubeadm-init-first-master
+    - init-cluster
     - container-network
+
+- name: Join Control Planes
+  hosts: control_planes:!control_planes[0]
+  become: true
+  roles:
+    - join-masters
+
+- name: Join Workers
+  hosts: workers
+  become: true
+  roles:
+    - join-workers
+
+- name: Update Launch Template (User Data)
+  hosts: localhost
+  gather_facts: false
+  become: true
+  roles:
+    - update-launch-template
+
+- name: Cluster AutoScaler
+  hosts: control_planes[0]
+  become: true
+  environment:
+    KUBECONFIG: "{{kube_config}}"
+  roles:
+    - cluster-autoscaler

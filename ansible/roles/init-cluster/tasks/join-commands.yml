@@ -1,0 +1,21 @@
+---
+# Configure TTL here
+- name: Print Join Command
+  shell: kubeadm token create --print-join-command
+  register: join_command
+
+- name: Generate Certificate Key
+  shell: kubeadm init phase upload-certs --upload-certs | tail -n 1
+  register: certificate_key
+
+- name: Create Join Command (Control Plane)
+  copy:
+    content: "{{ join_command.stdout_lines[0] }} --control-plane --certificate-key {{ certificate_key.stdout_lines[0] }}"
+    dest: /tmp/kubeadm-join-control-plane.txt
+  delegate_to: localhost
+
+- name: Create Join Command (Workers)
+  copy:
+    content: "{{ join_command.stdout_lines[0] }}"
+    dest: /tmp/kubeadm-join-workers.txt
+  delegate_to: localhost
