@@ -1,0 +1,5 @@
+---
+- name: Join Workers
+  vars:
+    join_worker: "{{ lookup('file', '/tmp/kubeadm-join-worker.txt') }}"
+  shell: "{{ join_worker }}"

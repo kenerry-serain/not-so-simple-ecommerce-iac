@@ -1,0 +1,5 @@
+---
+- include_tasks: terraform-output.yml
+- include_tasks: upload-template.yml
+- include_tasks: kubeadm-init.yml
+- include_tasks: join-commands.yml

@@ -5,7 +5,7 @@
 # Local .terraform directories
 **/.terraform/*
 **/node_modules/*
-
+**/outputs.json
 # .tfstate files
 *.tfstate
 *.tfstate.*
