@@ -20,15 +20,19 @@
 - name: Join Control Planes
   hosts: control_planes:!control_planes[0]
   become: true
-  environment:
-    KUBECONFIG: "{{kube_config}}"
   roles:
     - join-control-planes
 
 - name: Join Workers
   hosts: workers
   become: true
+  roles:
+    - join-workers
+
+- name: Setting Up Cluster Auto Scaler
+  hosts: control_planes[0]
+  become: true
   environment:
     KUBECONFIG: "{{kube_config}}"
   roles:
-    - join-workers
+    - cluster-autoscaler

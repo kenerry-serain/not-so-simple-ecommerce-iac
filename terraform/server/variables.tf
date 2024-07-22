@@ -153,6 +153,7 @@ variable "worker_auto_scaling_group" {
     desired_capacity          = number
     health_check_grace_period = number
     health_check_type         = string
+    cluster_auto_scaler_policy_name = string
     instance_tags = object({
       Name = string
     })
@@ -164,7 +165,7 @@ variable "worker_auto_scaling_group" {
 
   default = {
     name                      = "nsse-production-worker-asg"
-    max_size                  = 2
+    max_size                  = 5
     min_size                  = 2
     desired_capacity          = 2
     health_check_grace_period = 180
