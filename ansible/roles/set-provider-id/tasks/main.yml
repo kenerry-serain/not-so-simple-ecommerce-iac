@@ -1,0 +1,18 @@
+---
+- name: Get Availability Zone
+  shell: curl http://169.254.169.254/latest/meta-data/placement/availability-zone
+  register: az_output
+
+- name: Get Instance Id
+  shell: curl http://169.254.169.254/latest/meta-data/instance-id
+  register: instance_id_output
+
+- name: Get Node Name
+  shell: hostname
+  register: node_name_output
+
+- name: Patch Provider Id
+  vars:
+    provider_id: "aws://{{az_output.stdout}}/{{instance_id_output.stdout}}"
+  shell: |
+    kubectl patch node {{node_name_output.stdout}} -p '{"spec":{"providerID":"{{provider_id}}"}}'
