@@ -1,6 +1,6 @@
 ---
 - name: KubeAdm Init
-  shell: kubeadm reset -f && kubeadm init --config /home/admin/kubeadm-init.yml
+  shell: kubeadm init --config /home/admin/kubeadm-init.yml
   register: kubeadm_init_output
 
 - name: KubeAdm Init (Output)

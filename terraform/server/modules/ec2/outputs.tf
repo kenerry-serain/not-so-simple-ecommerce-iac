@@ -9,3 +9,7 @@ output "auto_scaling_group_name" {
 output "auto_scaling_group_arn" {
   value = aws_autoscaling_group.this.arn
 }
+
+output "launch_template_id"{
+  value = aws_launch_template.this.id
+}

@@ -1,0 +1,20 @@
+---
+
+- name: Create user data script file with variable substitution
+  vars:
+    join_workers: "{{ lookup('file', '/tmp/kubeadm-join-workers.txt') }}"
+  template:
+    src: worker-user-data-v2.sh
+    dest: /tmp/user-data.sh
+    
+- name: Update the launch template with the new startup script
+  vars:
+    terraform_outputs: "{{ lookup('file', '{{terraform_path}}/server/outputs.json') }}"
+    worker_launch_template_id: "{{ terraform_outputs.worker_launch_template_id.value }}"
+  environment:
+    AWS_REGION: "{{aws_region}}"
+    AWS_ACCESS_KEY: "{{aws_access_key}}"
+    AWS_SECRET_ACCESS_KEY: "{{aws_secret_access_key}}"
+  ec2_launch_template:
+    template_id: "{{ worker_launch_template_id }}"
+    user_data: "{{ lookup('file', '/tmp/user-data.sh') | b64encode }}"

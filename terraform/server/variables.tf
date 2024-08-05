@@ -165,6 +165,7 @@ variable "worker_auto_scaling_group" {
 
   default = {
     name                      = "nsse-production-worker-asg"
+    cluster_auto_scaler_policy_name = "nsse-production-cluster-autoscaler-policy"
     max_size                  = 5
     min_size                  = 2
     desired_capacity          = 2

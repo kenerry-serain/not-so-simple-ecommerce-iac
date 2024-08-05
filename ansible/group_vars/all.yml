@@ -5,3 +5,4 @@ aws_region: us-east-1
 aws_access_key: <YOUR_ACCESS_KEY>
 aws_secret_access_key: <YOUR_SECRET_ACCESS_KEY>
 kube_config: /etc/kubernetes/admin.conf
+kube_config_worker: /etc/kubernetes/kubelet.conf

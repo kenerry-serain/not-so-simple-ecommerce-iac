@@ -59,9 +59,19 @@ function installContainerRuntime(){
 }
 
 function joinWorkerNode(){
-    # {{joinWorkerCommand}}
-    kubeadm join nsse-production-cp-nlb-86c722d3a946bf3e.elb.us-east-1.amazonaws.com:6443 --token cwii33.sije55nxciq3oci1 --discovery-token-ca-cert-hash sha256:99bd836762b8652e823d96015ecd6aa68580bf174d9aa035ca33f70c5901aa4c
+    {{joinWorkerCommand}}
 }
+
+function setProviderId(){
+    export KUBECONFIG=/etc/kubernetes/kubelet.conf
+    instanceId=$(curl http://169.254.169.254/latest/meta-data/instance-id)
+    availabilityZone=$(curl http://169.254.169.254/latest/meta-data/placement/availability-zone)
+    providerId="aws:///$availabilityZone/$instanceId"
+    hostname=$(hostname)
+
+    kubectl patch node "$hostname" -p "{\"spec\":{\"providerID\":\"$providerId\"}}"
+}
+
 
 updateHostname
 installSystemsManagerAgentOnEc2
@@ -69,3 +79,4 @@ installKubernetesDependencyPackages
 installKubernetesPackages
 installContainerRuntime
 joinWorkerNode
+setProviderId
