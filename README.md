@@ -18,7 +18,7 @@ aws iam create-role \
     "Statement": [{
         "Effect": "Allow",
         "Principal": {
-            "AWS": "arn:aws:iam::<YOUR_ACCOUNT>:user/administrator"
+            "AWS": "arn:aws:iam::<YOUR_ACCOUNT>:user/<YOUR_USER>"
         },
         "Action": "sts:AssumeRole",
         "Condition": {
