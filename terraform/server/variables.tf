@@ -33,7 +33,7 @@ variable "assume_role" {
 
   default = {
     role_arn    = "<YOUR_ROLE>"
-    external_id = "7cacab4d-c52c-473c-8db2-883391bc030d"
+    external_id = "<YOUR_EXTERNAL_ID>"
   }
 }
 
