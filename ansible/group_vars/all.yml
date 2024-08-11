@@ -1,8 +1,9 @@
 ansible_connection: aws_ssm
 ansible_aws_ssm_bucket_name: not-so-simple-ecommerce-ansible-ssm
-terraform_path: /mnt/c/Users/kener/Repositories/not-so-simple-ecommerce-iac/terraform
+terraform_path: <YOUR_REPOSITORY_PATH>/not-so-simple-ecommerce-iac/terraform
 aws_region: us-east-1
 aws_access_key: <YOUR_ACCESS_KEY>
 aws_secret_access_key: <YOUR_SECRET_ACCESS_KEY>
+aws_profile: <YOUR_AWS_PROFILE>
 kube_config: /etc/kubernetes/admin.conf
 kube_config_worker: /etc/kubernetes/kubelet.conf
