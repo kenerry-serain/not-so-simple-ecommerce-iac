@@ -25,9 +25,11 @@ export const handler = async (event: any, _: Context) => {
     });
     
     const body = typeof event.body === 'string' ? JSON.parse(event.body) : event.body;
-    if (!body || !body.Id) {
-        throw new Error('Id is missing from the event body');
+    const id = body?.Id || event.Id;
+    if (!id) {
+        throw new Error('Id is missing from the event');
     }
+    
 
     /* Conectando no Banco de Dados */
     await client.connect();
