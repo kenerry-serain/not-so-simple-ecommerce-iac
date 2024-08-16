@@ -1,6 +1,6 @@
 
 plugin: amazon.aws.aws_ec2
-profile: "{{aws_profile}}"
+profile: <YOUR_AWS_PROFILE>
 regions:
   - us-east-1
 groups:
