@@ -36,6 +36,11 @@
     - join-workers
     - set-provider-id
 
+- name: Update Launch Template
+  hosts: localhost
+  roles:
+    - update-launch-template
+
 - name: Setting Up Cluster Auto Scaler
   hosts: control_planes[0]
   become: true

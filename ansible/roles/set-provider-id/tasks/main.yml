@@ -13,6 +13,6 @@
 
 - name: Patch Provider Id
   vars:
-    provider_id: "aws://{{az_output.stdout}}/{{instance_id_output.stdout}}"
+    provider_id: "aws:///{{az_output.stdout}}/{{instance_id_output.stdout}}"
   shell: |
     kubectl patch node {{node_name_output.stdout}} -p '{"spec":{"providerID":"{{provider_id}}"}}'
