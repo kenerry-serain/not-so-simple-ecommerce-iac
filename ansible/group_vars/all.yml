@@ -7,3 +7,5 @@ aws_secret_access_key: <YOUR_SECRET_ACCESS_KEY>
 aws_profile: <YOUR_AWS_PROFILE>
 kube_config: /etc/kubernetes/admin.conf
 kube_config_worker: /etc/kubernetes/kubelet.conf
+aws_account_id: 968225077300
+termination_handler_queue: not-so-simple-ecommerce-termination-handler-queue

@@ -1,0 +1,14 @@
+{
+    "Version": "2012-10-17",
+    "Id": "NodeTerminationQueuePolicy",
+    "Statement": [{
+        "Effect": "Allow",
+        "Principal": {
+            "Service": ["events.amazonaws.com", "sqs.amazonaws.com"]
+        },
+        "Action": "sqs:SendMessage",
+        "Resource": [
+            "arn:aws:sqs:{{aws_region}}:{{aws_account_id}}:{{termination_handler_queue}}"
+        ]
+    }]
+}

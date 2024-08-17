@@ -1,0 +1,7 @@
+- name: Installing
+  shell: |
+    kubectl apply -f https://raw.githubusercontent.com/kubernetes/cloud-provider-aws/master/examples/existing-cluster/base/service-account.yaml \
+      -f https://raw.githubusercontent.com/kubernetes/cloud-provider-aws/master/examples/existing-cluster/base/cluster-role.yaml \
+      -f https://raw.githubusercontent.com/kubernetes/cloud-provider-aws/master/examples/existing-cluster/base/cluster-role-binding.yaml \
+      -f https://raw.githubusercontent.com/kubernetes/cloud-provider-aws/master/examples/existing-cluster/base/apiserver-authentication-reader-role-binding.yaml \
+      -f https://raw.githubusercontent.com/kubernetes/cloud-provider-aws/master/examples/existing-cluster/base/aws-cloud-controller-manager-daemonset.yaml

@@ -1,0 +1,20 @@
+- name: Install Node Termination Handler
+  vars:
+    terraform_outputs: "{{ lookup('file', '{{terraform_path}}/server/outputs.json') }}"
+    node_termination_queue_url: "{{ terraform_outputs.node_termination_queue_url.value }}"
+  shell: |
+
+    curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 && \
+    chmod 700 get_helm.sh && \
+    ./get_helm.sh
+
+    aws ecr-public get-login-password \
+     --region {{aws_region}} | helm registry login \
+     --username AWS \
+     --password-stdin public.ecr.aws
+
+    helm upgrade --install aws-node-termination-handler \
+      --namespace kube-system \
+      --set enableSqsTerminationDraining=true \
+      --set queueURL={{node_termination_queue_url}} \
+      oci://public.ecr.aws/aws-ec2/helm/aws-node-termination-handler --recreate-pods --force
