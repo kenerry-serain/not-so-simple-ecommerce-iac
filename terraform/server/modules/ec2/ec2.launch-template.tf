@@ -26,4 +26,10 @@ resource "aws_launch_template" "this" {
     resource_type = "instance"
     tags          = var.tags
   }
+
+  lifecycle {
+    ignore_changes = [ 
+      user_data
+     ]
+  }
 }

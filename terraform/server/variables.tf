@@ -147,12 +147,12 @@ variable "control_plane_auto_scaling_group" {
 
 variable "worker_auto_scaling_group" {
   type = object({
-    name                      = string
-    max_size                  = number
-    min_size                  = number
-    desired_capacity          = number
-    health_check_grace_period = number
-    health_check_type         = string
+    name                            = string
+    max_size                        = number
+    min_size                        = number
+    desired_capacity                = number
+    health_check_grace_period       = number
+    health_check_type               = string
     cluster_auto_scaler_policy_name = string
     instance_tags = object({
       Name = string
@@ -164,13 +164,13 @@ variable "worker_auto_scaling_group" {
   })
 
   default = {
-    name                      = "nsse-production-worker-asg"
+    name                            = "nsse-production-worker-asg"
     cluster_auto_scaler_policy_name = "nsse-production-cluster-autoscaler-policy"
-    max_size                  = 5
-    min_size                  = 2
-    desired_capacity          = 2
-    health_check_grace_period = 180
-    health_check_type         = "EC2"
+    max_size                        = 5
+    min_size                        = 2
+    desired_capacity                = 2
+    health_check_grace_period       = 180
+    health_check_type               = "EC2"
     instance_tags = {
       Name = "nsse-production-worker"
     }
@@ -290,10 +290,10 @@ variable "network_load_balancer" {
     internal           = bool
     load_balancer_type = string
     default_tg = object({
-      name        = string
-      target_type = string
-      port        = number
-      protocol    = string
+      name               = string
+      target_type        = string
+      port               = number
+      protocol           = string
       preserve_client_ip = bool
     })
     default_listener = object({
@@ -307,15 +307,37 @@ variable "network_load_balancer" {
     internal           = true
     load_balancer_type = "network"
     default_tg = {
-      name        = "nsse-production-cp-nlb-tcp-tg"
-      target_type = "instance"
-      port        = 6443
-      protocol    = "TCP"
+      name               = "nsse-production-cp-nlb-tcp-tg"
+      target_type        = "instance"
+      port               = 6443
+      protocol           = "TCP"
       preserve_client_ip = false
     }
     default_listener = {
       port     = 6443
       protocol = "TCP"
     }
+  }
+}
+
+variable "node_termination" {
+  type = object({
+    queue_name                = string
+    role_name                 = string
+    policy_name               = string
+    hook_name                 = string
+    hook_default_result       = string
+    hook_heartbeat_timeout    = number
+    hook_lifecycle_transition = string
+  })
+
+  default = {
+    queue_name                = "NodeTerminationQueue"
+    role_name                 = "nsse-production-node-termination-role"
+    policy_name               = "nsse-production-node-termination-policy"
+    hook_name                 = "NodeTerminationNotification"
+    hook_default_result       = "CONTINUE"
+    hook_heartbeat_timeout    = 300
+    hook_lifecycle_transition = "autoscaling:EC2_INSTANCE_TERMINATING"
   }
 }

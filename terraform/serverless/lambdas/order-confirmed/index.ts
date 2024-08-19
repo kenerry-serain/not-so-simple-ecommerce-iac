@@ -29,7 +29,6 @@ export const handler = async (event: any, _: Context) => {
     if (!id) {
         throw new Error('Id is missing from the event');
     }
-    
 
     /* Conectando no Banco de Dados */
     await client.connect();

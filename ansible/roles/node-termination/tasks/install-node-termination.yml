@@ -1,0 +1,18 @@
+- name: Authenticate Public ECR
+  shell: |
+    aws ecr-public get-login-password \
+     --region {{aws_region}} | helm registry login \
+     --username AWS \
+     --password-stdin public.ecr.aws
+
+- name: Instaling AWS Node Termination Handler
+  vars:
+    terraform_outputs: "{{ lookup('file', '{{terraform_path}}/server/outputs.json') }}"
+    node_termination_queue_url: "{{ terraform_outputs.node_termination_queue_url.value }}"
+  shell: |
+    kubectl rollout restart deploy/coredns -n kube-system
+    helm upgrade --install aws-node-termination-handler \
+      --namespace kube-system \
+      --set enableSqsTerminationDraining=true \
+      --set queueURL={{node_termination_queue_url}} \
+      oci://public.ecr.aws/aws-ec2/helm/aws-node-termination-handler

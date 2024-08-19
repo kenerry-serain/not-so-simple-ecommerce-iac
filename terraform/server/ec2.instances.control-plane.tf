@@ -27,6 +27,9 @@ module "ec2_control_plane_instances" {
     target_group_arns         = [aws_lb_target_group.nlb_tcp.arn]
     instance_tags = merge(
       { PatchGroup = var.patch_group },
+      {
+        "kubernetes.io/cluster/devops-na-nuvem-cluster" = "owned"
+      },
       var.tags,
       var.control_plane_auto_scaling_group.instance_tags
     )
