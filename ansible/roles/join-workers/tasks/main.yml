@@ -1,5 +1,3 @@
 ---
-- name: Join Workers
-  vars:
-    join_worker: "{{ lookup('file', '/tmp/kubeadm-join-worker.txt') }}"
-  shell: "export KUBELET_EXTRA_ARGS=\"--cloud-provider=external\" && {{ join_worker }}"
+- include_tasks: join-workers.yml
+- include_tasks: kubelet-tls-configuration.yml

@@ -23,3 +23,8 @@ clusterName: "devops-na-nuvem-cluster"
 controllerManager:
   extraArgs:
     cloud-provider: external
+---
+apiVersion: kubelet.config.k8s.io/v1beta1
+kind: KubeletConfiguration
+serverTLSBootstrap: true
+cgroupDriver: systemd

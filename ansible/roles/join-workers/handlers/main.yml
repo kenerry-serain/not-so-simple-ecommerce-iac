@@ -1,0 +1,5 @@
+---
+- name: Restart Kubelet
+  systemd_service:
+    state: restarted
+    name: kubelet

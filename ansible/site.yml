@@ -41,7 +41,7 @@
   roles:
     - update-launch-template
 
-- name: Setting Up Cluster Auto Scaler
+- name: Setting Up Cluster Components
   hosts: control_planes[0]
   become: true
   environment:
@@ -50,3 +50,6 @@
     - cloud-controller
     - node-termination
     - cluster-autoscaler
+    - metrics-server
+    - csr-approver
+    

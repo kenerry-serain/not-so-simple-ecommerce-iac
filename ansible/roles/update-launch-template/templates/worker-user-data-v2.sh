@@ -59,7 +59,21 @@ function installContainerRuntime(){
 }
 
 function joinWorkerNode(){
+    export KUBELET_EXTRA_ARGS="--cloud-provider=external"
+
     {{joinWorkerCommand}}
+}
+
+function enableTLSBootstrapAndRestartKubelet(){
+
+    cat <<EOF > /var/lib/kubelet/config.yaml
+      apiVersion: kubelet.config.k8s.io/v1beta1
+      kind: KubeletConfiguration
+      serverTLSBootstrap: true
+      cgroupDriver: systemd
+EOF
+
+    systemctl restart kubelet && sleep 10
 }
 
 function setProviderId(){
@@ -79,4 +93,5 @@ installKubernetesDependencyPackages
 installKubernetesPackages
 installContainerRuntime
 joinWorkerNode
+enableTLSBootstrapAndRestartKubelet
 setProviderId
