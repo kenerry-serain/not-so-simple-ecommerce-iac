@@ -48,8 +48,8 @@
     KUBECONFIG: "{{kube_config}}"
   roles:
     - cloud-controller
-    - node-termination
+    - node-termination  
     - cluster-autoscaler
+    - argocd
     - metrics-server
-    - csr-approver
-    
+    - load-balancer-controller

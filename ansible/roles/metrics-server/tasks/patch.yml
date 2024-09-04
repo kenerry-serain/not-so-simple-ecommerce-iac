@@ -1,0 +1,9 @@
+---  
+- name: Patching Metrics Server
+  shell: |
+    kubectl patch deployment metrics-server -n kube-system --type='json' -p='[
+      {"op": "replace", "path": "/spec/template/spec/containers/0/args/1", "value": "--secure-port=4443"},
+      {"op": "add", "path": "/spec/template/spec/containers/0/args/-", "value": "--kubelet-insecure-tls"},
+      {"op": "replace", "path": "/spec/template/spec/containers/0/ports/0/containerPort", "value": 4443}
+    ]'
+

@@ -1,5 +1,0 @@
-- name: Installing CSR Approver
-  shell: |
-    helm repo add kubelet-csr-approver https://postfinance.github.io/kubelet-csr-approver
-    helm install kubelet-csr-approver kubelet-csr-approver/kubelet-csr-approver -n kube-system \
-      --set providerIpPrefixes='10.0.0.0/24'

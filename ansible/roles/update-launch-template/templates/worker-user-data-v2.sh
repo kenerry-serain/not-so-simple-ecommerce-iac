@@ -64,17 +64,6 @@ function joinWorkerNode(){
     {{joinWorkerCommand}}
 }
 
-function enableTLSBootstrapAndRestartKubelet(){
-
-    cat <<EOF > /var/lib/kubelet/config.yaml
-      apiVersion: kubelet.config.k8s.io/v1beta1
-      kind: KubeletConfiguration
-      serverTLSBootstrap: true
-      cgroupDriver: systemd
-EOF
-
-    systemctl restart kubelet && sleep 10
-}
 
 function setProviderId(){
     export KUBECONFIG=/etc/kubernetes/kubelet.conf
@@ -93,5 +82,4 @@ installKubernetesDependencyPackages
 installKubernetesPackages
 installContainerRuntime
 joinWorkerNode
-enableTLSBootstrapAndRestartKubelet
 setProviderId

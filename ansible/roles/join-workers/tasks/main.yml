@@ -1,3 +1,2 @@
 ---
 - include_tasks: join-workers.yml
-- include_tasks: kubelet-tls-configuration.yml
