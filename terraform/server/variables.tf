@@ -341,3 +341,37 @@ variable "node_termination" {
     hook_lifecycle_transition = "autoscaling:EC2_INSTANCE_TERMINATING"
   }
 }
+
+variable "ecr_repositories" {
+  type = list(object({
+    name                 = string
+    image_tag_mutability = string
+  }))
+
+  default = [
+    {
+      name                 = "nsse/production/health-checker"
+      image_tag_mutability = "MUTABLE"
+    },
+    {
+      name                 = "nsse/production/notificator"
+      image_tag_mutability = "MUTABLE"
+    },
+    {
+      name                 = "nsse/production/order"
+      image_tag_mutability = "MUTABLE"
+    },
+    {
+      name                 = "nsse/production/invoice-generator"
+      image_tag_mutability = "MUTABLE"
+    },
+    {
+      name                 = "nsse/production/identity-server"
+      image_tag_mutability = "MUTABLE"
+    },
+    {
+      name                 = "nsse/production/main"
+      image_tag_mutability = "MUTABLE"
+    }
+  ]
+}
