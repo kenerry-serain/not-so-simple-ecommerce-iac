@@ -16,7 +16,7 @@ networking:
 controlPlaneEndpoint: "{{nlb_dns_name}}:6443"
 apiServer:
   certSANs:
-    - "localhost"
+    - "127.0.0.1"
   extraArgs:
     cloud-provider: external
 clusterName: "devops-na-nuvem-cluster"

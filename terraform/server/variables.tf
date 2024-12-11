@@ -375,3 +375,8 @@ variable "ecr_repositories" {
     }
   ]
 }
+
+variable "domain" {
+  type = string
+  default = "devopsnanuvem.com"
+}
