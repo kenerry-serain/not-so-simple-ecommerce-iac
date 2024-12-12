@@ -48,6 +48,7 @@ data "aws_iam_policy_document" "controller_manager_policy" {
       "elasticloadbalancing:DeleteListener",
       "elasticloadbalancing:DeleteTargetGroup",
       "elasticloadbalancing:DescribeListeners",
+      "elasticloadbalancing:DescribeListeners",
       "elasticloadbalancing:DescribeLoadBalancerPolicies",
       "elasticloadbalancing:DescribeTargetGroups",
       "elasticloadbalancing:DescribeTargetHealth",

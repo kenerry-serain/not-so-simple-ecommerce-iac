@@ -54,3 +54,4 @@
     - metrics-server
     - load-balancer-controller
     - container-storage
+    - external-dns
