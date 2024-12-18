@@ -25,24 +25,3 @@ resource "aws_security_group_rule" "documentdb_self" {
   security_group_id = aws_security_group.documentdb.id
 }
 
-resource "aws_security_group_rule" "documentdb_worker" {
-  type              = "ingress"
-  from_port         = 27017
-  to_port           = 27017
-  protocol          = "-1"
-  self              = true
-  security_group_id = data.aws_security_group.worker.id
-}
-
-
-resource "aws_security_group_rule" "documentdb_control_plane" {
-  type              = "ingress"
-  from_port         = 0
-  to_port           = 0
-  protocol          = "-1"
-  self              = true
-  security_group_id = data.aws_security_group.control_plane.id
-}
-
-
-
