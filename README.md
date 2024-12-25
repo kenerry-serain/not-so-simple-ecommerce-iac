@@ -23,14 +23,14 @@ $ aws iam create-role \
         "Action": "sts:AssumeRole",
         "Condition": {
             "StringEquals": {
-                "sts:ExternalId": "<YOUR_EXTERNAL_ID>"
+                "sts:ExternalId": "f2ed091d-8d7d-46cb-be56-fb349d502cfb"
             }
         }
     }]
 }'
 
 ```
-Sendo que `<YOUR_EXTERNAL_ID>` significa uma string qualquer randômica como `bbe2a601-5f8c-41f8-91f2-ec734456ad4b`.
+Sendo que `f2ed091d-8d7d-46cb-be56-fb349d502cfb` significa uma string qualquer randômica como `bbe2a601-5f8c-41f8-91f2-ec734456ad4b`.
 
 Agora anexe permissões administrativas a role criada executando o comando:
 
@@ -40,16 +40,16 @@ $    aws iam attach-role-policy \
         --policy-arn arn:aws:iam::aws:policy/AdministratorAccess
 ```
 
-Realize a substituição da string `<YOUR_ROLE>` nos arquivos terraform (.tf) do repositório pelo valor correto executando o comando:
+Realize a substituição da string `arn:aws:iam::<AWS_ACCOUNT_ID>:role/DevOpsNaNuvemRole-9db671b2-c6ce-460c-9eb0-f27e903d0f9a` nos arquivos terraform (.tf) do repositório pelo valor correto executando o comando:
 
 ```bash
-$ find . -type f -name "*.tf" -exec sed -i 's|<YOUR_ROLE>|arn:aws:iam::<YOUR_ACCOUNT>:role/DevOpsNaNuvemRole|g' {} +
+$ find . -type f -name "*.tf" -exec sed -i 's|arn:aws:iam::<AWS_ACCOUNT_ID>:role/DevOpsNaNuvemRole-9db671b2-c6ce-460c-9eb0-f27e903d0f9a|arn:aws:iam::<YOUR_ACCOUNT>:role/DevOpsNaNuvemRole|g' {} +
 ```
 
-Realize a substituição da string `<YOUR_EXTERNAL_ID>` nos arquivos terraform (.tf) do repositório pelo valor verdadeiro `<YOUR_REAL_EXTERNAL_ID>` executando o comando:
+Realize a substituição da string `f2ed091d-8d7d-46cb-be56-fb349d502cfb` nos arquivos terraform (.tf) do repositório pelo valor verdadeiro `<YOUR_REAL_EXTERNAL_ID>` executando o comando:
 
 ```bash
-$ find . -type f -name "*.tf" -exec sed -i 's|<YOUR_EXTERNAL_ID>|<YOUR_REAL_EXTERNAL_ID>|g' {} +
+$ find . -type f -name "*.tf" -exec sed -i 's|f2ed091d-8d7d-46cb-be56-fb349d502cfb|<YOUR_REAL_EXTERNAL_ID>|g' {} +
 ```
 
 Execute primeiramente a criação da stack `backend`, para realizar a criação do backend remoto, que é composto de um bucket S3 para remote file state storage a uma tabela no Dynamo para state locking handling:
