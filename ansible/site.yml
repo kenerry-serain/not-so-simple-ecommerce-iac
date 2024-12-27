@@ -47,11 +47,12 @@
   environment:
     KUBECONFIG: "{{kube_config}}"
   roles:
+    - helm
     - cloud-controller
     - node-termination  
     - cluster-autoscaler
     - argocd
     - metrics-server
+    - external-dns
     - load-balancer-controller
     - container-storage
-    - external-dns

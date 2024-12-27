@@ -1,3 +1,3 @@
 ---
-- include_tasks: operator.yml
-- include_tasks: custom-resource.yml
+- name: Installing Antrea CNI
+  shell: kubectl apply -f https://raw.githubusercontent.com/antrea-io/antrea/main/build/yamls/antrea.yml
