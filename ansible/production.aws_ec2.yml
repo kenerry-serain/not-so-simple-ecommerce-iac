@@ -8,3 +8,5 @@ groups:
   workers: "'nsse-production-worker' in tags.Name"
 hostnames:
   - instance-id
+filters:
+  instance-state-name: running
