@@ -8,7 +8,7 @@ resource "aws_db_proxy_default_target_group" "main" {
   }
 }
 
-resource "aws_db_proxy_target" "example" {
+resource "aws_db_proxy_target" "rds" {
   db_cluster_identifier = aws_rds_cluster.this.cluster_identifier
   db_proxy_name         = aws_db_proxy.this.name
   target_group_name     = aws_db_proxy_default_target_group.main.name
