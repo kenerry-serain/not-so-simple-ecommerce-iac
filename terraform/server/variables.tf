@@ -32,7 +32,7 @@ variable "assume_role" {
   })
 
   default = {
-    role_arn    = "<YOUR_ROLE>"
+    role_arn    = "<YOUR_ROLE_ARN>"
     external_id = "<YOUR_EXTERNAL_ID>"
   }
 }
