@@ -145,32 +145,43 @@ find . -type f -name "*.yml" -exec sed -i '' \
 
 ```bash
 export BECOME_PASSWORD="<YOUR_PASSWORD>"
-ansible-playbook -i production.aws_ec2.yml site.yml --extra-vars "ansible_become_password=$BECOME_PASSWORD"
+ansible-playbook -i production.aws_ec2.yml site.yml \
+    --extra-vars "ansible_become_password=$BECOME_PASSWORD"
 ```
 
 ---
 
-### 11. Conexão no Cluster Kubernetes Localmente
-
+### 11. Configuração Kube Config
 ```bash
 aws ssm start-session --target <ANY_MASTER_INSTANCE_ID>
 sudo su
 cat /etc/kubernetes/admin.conf
 ```
 
+Copie o resultado do cat, para o arquivo /etc/kubernetes/admin.conf na sua máquina local e lembre-se
+de substituir o DNS do NLB por 127.0.0.1 e também adicionar o apontamento do endereço 127.0.0.1 para o 
+DNS do NLB no arquivo hosts da sua máquina.
+
 ---
 
 ### 12. Teste da Conexão com o Cluster Kubernetes
+
+Para executar os manifestos deste repositório no Cluster Kubernetes a partir da sua máquina local, 
+primeiramente é necessário abrir um túnel com algum nó master mapeando localmente o kube-apiserver que estará 
+rodando na porta 6443 do nó localmente na mesma porta. Edite o arquivo `/etc/kubernetes/admin.conf` do passo anterior
+na sua máquina, substituindo o DNS do NLB por `127.0.0.1` e adicione o apontamento do endereço 127.0.0.1 para o 
+DNS do NLB no arquivo hosts da sua máquina e só então, abra o túnel. 
 
 ```bash
 aws ssm start-session \
     --target <ANY_MASTER_INSTANCE_ID> \
     --document-name AWS-StartPortForwardingSession \
     --parameters 'portNumber=6443,localPortNumber=6443'
-
 export KUBECONFIG=/etc/kubernetes/admin.conf
 kubectl get nodes
 ```
+
+📌 **Observação:** Se precisar revisar o processo, consulte a aula `Aula 33-Acesso Local e Port Forwarding` do módulo 06.
 
 ---
 
