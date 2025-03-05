@@ -43,6 +43,7 @@ variable "ec2_resources" {
     instance_profile             = string,
     instance_role                = string,
     control_plane_security_group = string,
+    alb_security_group           = string,
     worker_security_group        = string,
   })
 
@@ -50,7 +51,9 @@ variable "ec2_resources" {
     key_pair_name                = "nsse-production-key-pair"
     instance_role                = "nsse-production-instance-role"
     instance_profile             = "nsse-production-instance-profile"
+    alb_security_group           = "nsse-production-alb-security-group"
     control_plane_security_group = "nsse-production-control-plane-security-group"
+    alb_security_group           = "nsse-production-alb-security-group"
     worker_security_group        = "nsse-production-worker-security-group"
   }
 }

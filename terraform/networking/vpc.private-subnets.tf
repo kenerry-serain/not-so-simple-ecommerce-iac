@@ -11,6 +11,8 @@ resource "aws_subnet" "privates" {
   availability_zone       = var.private_subnets[count.index].availability_zone
   map_public_ip_on_launch = var.private_subnets[count.index].map_public_ip_on_launch
 
-  tags                    = merge({ Name = "${var.vpc_resources.vpc}-${var.private_subnets[count.index].name}" }, var.tags)
-  depends_on              = [aws_vpc.this]
+  tags = merge({
+    Name                     = "${var.vpc_resources.vpc}-${var.private_subnets[count.index].name}",
+    "kubernetes.io/role/internal-elb" = 1,
+  }, var.tags)
 }

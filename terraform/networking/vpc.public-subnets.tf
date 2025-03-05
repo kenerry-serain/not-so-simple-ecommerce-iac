@@ -13,7 +13,6 @@ resource "aws_subnet" "publics" {
 
   tags = merge({
     Name                     = "${var.vpc_resources.vpc}-${var.public_subnets[count.index].name}",
-    "kubernetes.io/role/elb" = "1"
   }, var.tags)
   depends_on = [aws_vpc.this]
 }
