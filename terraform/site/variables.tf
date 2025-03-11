@@ -34,6 +34,24 @@ variable "cloudfront" {
     default_root_object      = string
     price_class              = string
     domain                   = string
+    alb_vpc_origin = object({
+      name                   = string
+      http_port              = string
+      https_port             = string
+      origin_protocol_policy = string
+      origin_ssl_protocols = object({
+        items    = list(string)
+        quantity = number
+      })
+    })
+    ordered_cache_behaviors = list(object({
+      path_pattern             = string
+      allowed_methods          = list(string)
+      cached_methods           = list(string)
+      cache_policy_id          = string
+      origin_request_policy_id = string
+      viewer_protocol_policy   = string
+    }))
     default_cache_behavior = object({
       allowed_methods        = list(string)
       cached_methods         = list(string)
@@ -49,6 +67,64 @@ variable "cloudfront" {
     default_root_object      = "index.html"
     price_class              = "PriceClass_All"
     domain                   = "devopsnanuvem.com"
+    alb_vpc_origin = {
+      name                   = "nsse-internal-alb-vpc-origin"
+      http_port              = "80"
+      https_port             = "443"
+      origin_protocol_policy = "https-only"
+      origin_ssl_protocols = {
+        items    = ["TLSv1.2"]
+        quantity = 1
+      }
+    }
+    ordered_cache_behaviors = [{
+      path_pattern             = "/healthchecks/*"
+      allowed_methods          = ["GET", "HEAD", "OPTIONS", "PUT", "POST", "PATCH", "DELETE"]
+      cached_methods           = ["GET", "HEAD"]
+      cache_policy_id          = "4cc15a8a-d715-48a4-82b8-cc0b614638fe"
+      origin_request_policy_id = "216adef6-5c7f-47e4-b989-5492eafa07d3"
+      viewer_protocol_policy   = "redirect-to-https"
+      },
+      {
+        path_pattern             = "/notificator/*"
+        allowed_methods          = ["GET", "HEAD", "OPTIONS", "PUT", "POST", "PATCH", "DELETE"]
+        cached_methods           = ["GET", "HEAD"]
+        cache_policy_id          = "4cc15a8a-d715-48a4-82b8-cc0b614638fe"
+        origin_request_policy_id = "216adef6-5c7f-47e4-b989-5492eafa07d3"
+        viewer_protocol_policy   = "redirect-to-https"
+      },
+      {
+        path_pattern             = "/identity/*"
+        allowed_methods          = ["GET", "HEAD", "OPTIONS", "PUT", "POST", "PATCH", "DELETE"]
+        cached_methods           = ["GET", "HEAD"]
+        cache_policy_id          = "4cc15a8a-d715-48a4-82b8-cc0b614638fe"
+        origin_request_policy_id = "216adef6-5c7f-47e4-b989-5492eafa07d3"
+        viewer_protocol_policy   = "redirect-to-https"
+      },
+      {
+        path_pattern             = "/invoice/*"
+        allowed_methods          = ["GET", "HEAD", "OPTIONS", "PUT", "POST", "PATCH", "DELETE"]
+        cached_methods           = ["GET", "HEAD"]
+        cache_policy_id          = "4cc15a8a-d715-48a4-82b8-cc0b614638fe"
+        origin_request_policy_id = "216adef6-5c7f-47e4-b989-5492eafa07d3"
+        viewer_protocol_policy   = "redirect-to-https"
+      },
+      {
+        path_pattern             = "/order/*"
+        allowed_methods          = ["GET", "HEAD", "OPTIONS", "PUT", "POST", "PATCH", "DELETE"]
+        cached_methods           = ["GET", "HEAD"]
+        cache_policy_id          = "4cc15a8a-d715-48a4-82b8-cc0b614638fe"
+        origin_request_policy_id = "216adef6-5c7f-47e4-b989-5492eafa07d3"
+        viewer_protocol_policy   = "redirect-to-https"
+      },
+      {
+        path_pattern             = "/main/*"
+        allowed_methods          = ["GET", "HEAD", "OPTIONS", "PUT", "POST", "PATCH", "DELETE"]
+        cached_methods           = ["GET", "HEAD"]
+        cache_policy_id          = "4cc15a8a-d715-48a4-82b8-cc0b614638fe"
+        origin_request_policy_id = "216adef6-5c7f-47e4-b989-5492eafa07d3"
+        viewer_protocol_policy   = "redirect-to-https"
+    }]
     default_cache_behavior = {
       allowed_methods = ["GET", "HEAD", "OPTIONS"]
       cached_methods  = ["GET", "HEAD"]
