@@ -1,37 +1,19 @@
-resource "aws_route_table" "private_1a" {
+resource "aws_route_table" "private" {
+  count = length(aws_subnet.private)
+
   vpc_id = aws_vpc.this.id
 
   route {
     cidr_block     = "0.0.0.0/0"
-    nat_gateway_id = aws_nat_gateway.us_east_1a.id
+    nat_gateway_id = aws_nat_gateway.this[count.index].id
   }
 
-  tags       = merge({ Name = "${var.vpc_resources.vpc}-${var.vpc_resources.private_route_table_1a}" }, var.tags)
-  depends_on = [aws_vpc.this]
+  tags = { Name = "${var.vpc.name}-${var.vpc.private_route_table_name}-${aws_subnet.private[count.index].availability_zone}" }
 }
 
-resource "aws_route_table_association" "private_associations_1a" {
-  subnet_id      = local.private_subnet_1a_id
-  route_table_id = aws_route_table.private_1a.id
+resource "aws_route_table_association" "private" {
+  count = length(aws_subnet.private)
 
-  depends_on = [aws_route_table.private_1a]
-}
-
-resource "aws_route_table" "private_1b" {
-  vpc_id = aws_vpc.this.id
-
-  route {
-    cidr_block     = "0.0.0.0/0"
-    nat_gateway_id = aws_nat_gateway.us_east_1b.id
-  }
-
-  tags       = merge({ Name = "${var.vpc_resources.vpc}-${var.vpc_resources.private_route_table_1b}" }, var.tags)
-  depends_on = [aws_vpc.this]
-}
-
-resource "aws_route_table_association" "private_associations_1b" {
-  subnet_id      = local.private_subnet_1b_id
-  route_table_id = aws_route_table.private_1b.id
-
-  depends_on = [aws_route_table.private_1b]
+  subnet_id      = aws_subnet.private[count.index].id
+  route_table_id = aws_route_table.private[count.index].id
 }

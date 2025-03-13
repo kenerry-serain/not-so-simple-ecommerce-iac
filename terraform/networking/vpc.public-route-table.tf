@@ -6,14 +6,12 @@ resource "aws_route_table" "public" {
     gateway_id = aws_internet_gateway.this.id
   }
 
-  tags       = merge({ Name = "${var.vpc_resources.vpc}-${var.vpc_resources.public_route_table}" }, var.tags)
-  depends_on = [aws_vpc.this]
+  tags = { Name = "${var.vpc.name}-${var.vpc.public_route_table_name}" }
 }
 
-resource "aws_route_table_association" "public_associations" {
-  count = length(aws_subnet.publics)
+resource "aws_route_table_association" "public" {
+  count = length(aws_subnet.public)
 
-  subnet_id      = aws_subnet.publics[count.index].id
+  subnet_id      = aws_subnet.public[count.index].id
   route_table_id = aws_route_table.public.id
-  depends_on     = [aws_route_table.public]
 }

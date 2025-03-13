@@ -51,7 +51,6 @@ variable "ec2_resources" {
     key_pair_name                = "nsse-production-key-pair"
     instance_role                = "nsse-production-instance-role"
     instance_profile             = "nsse-production-instance-profile"
-    alb_security_group           = "nsse-production-alb-security-group"
     control_plane_security_group = "nsse-production-control-plane-security-group"
     alb_security_group           = "nsse-production-alb-security-group"
     worker_security_group        = "nsse-production-worker-security-group"
@@ -380,6 +379,6 @@ variable "ecr_repositories" {
 }
 
 variable "domain" {
-  type = string
+  type    = string
   default = "devopsnanuvem.com"
 }
