@@ -9,8 +9,8 @@ variable "assume_role" {
   })
 
   default = {
-    role_arn    = "arn:aws:iam::968225077300:role/DevOpsNaNuvemRole-57feb1bd-41ba-47a6-bf6e-babf48ef06ef"
-    external_id = "4893a271-b991-45b7-9e3e-67c32873e950"
+    role_arn    = "<YOUR_ROLE_ARN>"
+    external_id = "<YOUR_EXTERNAL_ID>"
   }
 }
 
