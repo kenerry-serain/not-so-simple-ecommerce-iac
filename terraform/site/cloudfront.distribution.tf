@@ -1,9 +1,9 @@
 resource "aws_cloudfront_distribution" "this" {
-  enabled             = var.cloudfront.enabled
-  default_root_object = var.cloudfront.default_root_object
-  price_class         = var.cloudfront.price_class
-  aliases             = [var.cloudfront.domain]
-  web_acl_id          = aws_wafv2_web_acl.this.arn
+  enabled                         = var.cloudfront.enabled
+  default_root_object             = var.cloudfront.default_root_object
+  price_class                     = var.cloudfront.price_class
+  aliases                         = [var.cloudfront.domain]
+  web_acl_id                      = aws_wafv2_web_acl.this.arn
 
   origin {
     vpc_origin_config {
