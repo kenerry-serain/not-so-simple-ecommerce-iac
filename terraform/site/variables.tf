@@ -28,12 +28,14 @@ variable "assume_role" {
 
 variable "cloudfront" {
   type = object({
-    s3_site_bucket_name      = string
-    s3_site_logs_bucket_name = string
-    enabled                  = bool
-    default_root_object      = string
-    price_class              = string
-    domain                   = string
+    s3_site_bucket_name              = string
+    s3_site_logs_bucket_name         = string
+    s3_staging_site_bucket_name      = string
+    s3_staging_site_logs_bucket_name = string
+    enabled                          = bool
+    default_root_object              = string
+    price_class                      = string
+    domain                           = string
     alb_vpc_origin = object({
       name                   = string
       http_port              = string
@@ -61,12 +63,14 @@ variable "cloudfront" {
   })
 
   default = {
-    s3_site_bucket_name      = "devopsnanuvem.com"
-    s3_site_logs_bucket_name = "devopsnanuvem-com-logs"
-    enabled                  = true
-    default_root_object      = "index.html"
-    price_class              = "PriceClass_All"
-    domain                   = "devopsnanuvem.com"
+    s3_site_bucket_name              = "devopsnanuvemweek.com"
+    s3_site_logs_bucket_name         = "devopsnanuvemweek-com-logs"
+    s3_staging_site_bucket_name      = "staging.devopsnanuvemweek.com"
+    s3_staging_site_logs_bucket_name = "staging-devopsnanuvemweek-com-logs"
+    enabled                          = true
+    default_root_object              = "index.html"
+    price_class                      = "PriceClass_All"
+    domain                           = "devopsnanuvemweek.com"
     alb_vpc_origin = {
       name                   = "nsse-internal-alb-vpc-origin"
       http_port              = "80"

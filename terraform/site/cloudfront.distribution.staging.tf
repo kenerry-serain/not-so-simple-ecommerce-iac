@@ -1,10 +1,9 @@
-resource "aws_cloudfront_distribution" "this" {
-  enabled                         = var.cloudfront.enabled
-  default_root_object             = var.cloudfront.default_root_object
-  price_class                     = var.cloudfront.price_class
-  aliases                         = [var.cloudfront.domain]
-  web_acl_id                      = aws_wafv2_web_acl.this.arn
-  continuous_deployment_policy_id = aws_cloudfront_continuous_deployment_policy.this.id
+resource "aws_cloudfront_distribution" "staging" {
+  enabled             = var.cloudfront.enabled
+  default_root_object = var.cloudfront.default_root_object
+  price_class         = var.cloudfront.price_class
+  web_acl_id          = aws_wafv2_web_acl.this.arn
+  staging             = true
 
   origin {
     vpc_origin_config {
@@ -16,15 +15,15 @@ resource "aws_cloudfront_distribution" "this" {
   }
 
   origin {
-    domain_name              = aws_s3_bucket.site.bucket_regional_domain_name
+    domain_name              = aws_s3_bucket.staging_site.bucket_regional_domain_name
     origin_access_control_id = aws_cloudfront_origin_access_control.this.id
-    origin_id                = aws_s3_bucket.site.bucket_regional_domain_name
+    origin_id                = aws_s3_bucket.staging_site.bucket_regional_domain_name
   }
 
   default_cache_behavior {
     allowed_methods        = var.cloudfront.default_cache_behavior.allowed_methods
     cached_methods         = var.cloudfront.default_cache_behavior.cached_methods
-    target_origin_id       = aws_s3_bucket.site.bucket_regional_domain_name
+    target_origin_id       = aws_s3_bucket.staging_site.bucket_regional_domain_name
     cache_policy_id        = var.cloudfront.default_cache_behavior.cache_policy_id
     viewer_protocol_policy = var.cloudfront.default_cache_behavior.viewer_protocol_policy
   }
