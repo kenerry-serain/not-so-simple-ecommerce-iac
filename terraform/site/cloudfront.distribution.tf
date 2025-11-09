@@ -5,6 +5,7 @@ resource "aws_cloudfront_distribution" "this" {
   aliases                         = [var.cloudfront.domain]
   web_acl_id                      = aws_wafv2_web_acl.this.arn
   continuous_deployment_policy_id = aws_cloudfront_continuous_deployment_policy.this.id
+  wait_for_deployment             = false
 
   origin {
     vpc_origin_config {
@@ -53,4 +54,9 @@ resource "aws_cloudfront_distribution" "this" {
     acm_certificate_arn = data.aws_acm_certificate.this.arn
     ssl_support_method  = "sni-only"
   }
+
+  depends_on = [
+    aws_cloudfront_distribution.staging,
+    aws_cloudfront_continuous_deployment_policy.this
+  ]
 }

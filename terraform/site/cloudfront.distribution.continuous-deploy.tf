@@ -13,4 +13,6 @@ resource "aws_cloudfront_continuous_deployment_policy" "this" {
       value  = "1"
     }
   }
+
+  depends_on = [aws_cloudfront_distribution.staging]
 }
