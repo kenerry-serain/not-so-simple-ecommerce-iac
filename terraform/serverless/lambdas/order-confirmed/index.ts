@@ -36,12 +36,12 @@ export const handler = async (event: any, _: Context) => {
     try {
         /* Atualizando Status da Ordem para Confirmado */
         const sql = `UPDATE "Order" SET "StatusId" = 1 WHERE "Id" = $1`;
-        const values = [body.Id];
+        const values = [id];
         const response = await client.query(sql, values);
         console.log('Order updated successfully:', response);
 
         /* Publicando mensagem no tópico orderConfirmed */
-        await publishToSns(JSON.stringify({Id: body.Id}));
+        await publishToSns(JSON.stringify({Id: id}));
         return response;
     } catch (error) {
         console.error('Failed to update Order:', error);
