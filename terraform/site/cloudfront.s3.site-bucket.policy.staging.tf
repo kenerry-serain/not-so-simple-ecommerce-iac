@@ -24,8 +24,32 @@ data "aws_iam_policy_document" "allow_oac_access_staging" {
       test     = "StringEquals"
       variable = "AWS:SourceArn"
       values = [
-        aws_cloudfront_distribution.this.arn,
         aws_cloudfront_distribution.staging.arn,
+      ]
+    }
+  }
+
+  statement {
+    effect = "Allow"
+
+    principals {
+      type        = "Service"
+      identifiers = ["cloudfront.amazonaws.com"]
+    }
+
+    actions = [
+      "s3:GetObject",
+    ]
+
+    resources = [
+      "${aws_s3_bucket.staging_site.arn}/*",
+    ]
+
+    condition {
+      test     = "StringEquals"
+      variable = "AWS:SourceArn"
+      values = [
+        aws_cloudfront_distribution.this.arn,
       ]
     }
   }

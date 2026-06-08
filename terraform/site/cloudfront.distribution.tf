@@ -22,6 +22,13 @@ resource "aws_cloudfront_distribution" "this" {
     origin_id                = aws_s3_bucket.site.bucket_regional_domain_name
   }
 
+  origin {
+    domain_name              = aws_s3_bucket.staging_site.bucket_regional_domain_name
+    origin_access_control_id = aws_cloudfront_origin_access_control.this.id
+    origin_id                = aws_s3_bucket.staging_site.bucket_regional_domain_name
+  }
+
+
   default_cache_behavior {
     allowed_methods        = var.cloudfront.default_cache_behavior.allowed_methods
     cached_methods         = var.cloudfront.default_cache_behavior.cached_methods

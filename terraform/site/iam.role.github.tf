@@ -38,9 +38,10 @@ resource "aws_iam_policy" "github_frontend" {
         ]
         Effect = "Allow"
         Resource = [
-          #TODO Atualizar policy quando criar setup de staging (blue/green)
           aws_s3_bucket.site.arn,
-          "${aws_s3_bucket.site.arn}/*"
+          "${aws_s3_bucket.site.arn}/*",
+          aws_s3_bucket.staging_site.arn,
+          "${aws_s3_bucket.staging_site.arn}/*"
         ]
       },
       {
@@ -54,8 +55,8 @@ resource "aws_iam_policy" "github_frontend" {
         ]
         Effect = "Allow"
         Resource = [
-          #TODO Atualizar policy quando criar setup de staging (blue/green)
-          aws_cloudfront_distribution.this.arn
+          aws_cloudfront_distribution.this.arn,
+          aws_cloudfront_distribution.staging.arn
         ]
       },
     ]
