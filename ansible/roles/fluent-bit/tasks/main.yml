@@ -1,0 +1,30 @@
+---
+- name: Fetching Terraform Outputs
+  include_tasks: terraform-output.yml
+
+- name: Adding Fluent Helm Repository
+  shell: |
+    helm repo add fluent https://fluent.github.io/helm-charts
+    helm repo update
+
+- name: Rendering Fluent Bit Values
+  vars:
+    terraform_outputs: "{{ lookup('file', '/tmp/terraform-observability-outputs.json') }}"
+    opensearch_endpoint: "{{ terraform_outputs.opensearch_endpoint.value }}"
+  template:
+    src: values.yaml.j2
+    dest: "{{ terraform_path }}/../ansible/roles/fluent-bit/files/fluent-bit-values.yaml"
+  delegate_to: localhost
+  become: false
+
+- name: Uploading Fluent Bit Values
+  copy:
+    src: "{{ terraform_path }}/../ansible/roles/fluent-bit/files/fluent-bit-values.yaml"
+    dest: /tmp/fluent-bit-values.yaml
+
+- name: Installing Fluent Bit
+  shell: |
+    kubectl create namespace logging --dry-run=client -o yaml | kubectl apply -f -
+    helm upgrade --install fluent-bit fluent/fluent-bit \
+      --namespace logging \
+      --values /tmp/fluent-bit-values.yaml

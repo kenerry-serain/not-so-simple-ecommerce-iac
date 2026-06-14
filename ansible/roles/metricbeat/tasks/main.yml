@@ -1,0 +1,42 @@
+---
+- name: Fetching Terraform Outputs
+  include_tasks: terraform-output.yml
+
+- name: Adding Elastic Helm Repository
+  shell: |
+    helm repo add elastic https://helm.elastic.co
+    helm repo update
+
+- name: Rendering Metricbeat Values
+  vars:
+    terraform_outputs: "{{ lookup('file', '/tmp/terraform-observability-outputs.json') }}"
+    opensearch_endpoint: "{{ terraform_outputs.opensearch_endpoint.value }}"
+  template:
+    src: values.yaml.j2
+    dest: "{{ terraform_path }}/../ansible/roles/metricbeat/files/metricbeat-values.yaml"
+  delegate_to: localhost
+  become: false
+
+- name: Uploading Metricbeat Values
+  copy:
+    src: "{{ terraform_path }}/../ansible/roles/metricbeat/files/metricbeat-values.yaml"
+    dest: /tmp/metricbeat-values.yaml
+
+- name: Creating Observability Namespace
+  shell: |
+    kubectl create namespace observability --dry-run=client -o yaml | kubectl apply -f -
+
+- name: Creating OpenSearch credentials secret
+  shell: |
+    kubectl -n observability create secret generic opensearch-credentials \
+      --from-literal=password='{{ opensearch_master_password }}' \
+      --dry-run=client -o yaml | kubectl apply -f -
+
+- name: Installing Metricbeat
+  shell: |
+    helm upgrade --install metricbeat elastic/metricbeat \
+      --namespace observability \
+      --version 7.17.3 \
+      --set image=docker.elastic.co/beats/metricbeat-oss \
+      --set imageTag=7.10.2 \
+      --values /tmp/metricbeat-values.yaml

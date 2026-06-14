@@ -56,3 +56,12 @@
     - external-dns
     - load-balancer-controller
     - container-storage
+
+- name: Setting Up Observability
+  hosts: control_planes[0]
+  become: true
+  environment:
+    KUBECONFIG: "{{kube_config}}"
+  roles:
+    - fluent-bit
+    - metricbeat

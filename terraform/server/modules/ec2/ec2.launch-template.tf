@@ -22,6 +22,15 @@ resource "aws_launch_template" "this" {
     name = var.instance_profile_name
   }
 
+  # hop limit 2 lets pods inside CNI network namespaces reach IMDS at 169.254.169.254.
+  # default is 1, which blocks pod-level AWS SDK credential fetch — required for fluent-bit
+  # to assume the EC2 instance role and ship logs to OpenSearch via SigV4.
+  metadata_options {
+    http_endpoint               = "enabled"
+    http_tokens                 = "optional"
+    http_put_response_hop_limit = 2
+  }
+
   tag_specifications {
     resource_type = "instance"
     tags          = var.tags

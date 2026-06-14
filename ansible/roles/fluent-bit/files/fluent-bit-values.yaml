@@ -1,0 +1,68 @@
+resources:
+  requests:
+    cpu: 100m
+    memory: 128Mi
+  limits:
+    memory: 256Mi
+
+daemonSetVolumes:
+  - name: varlog
+    hostPath:
+      path: /var/log
+  - name: varlibcontainers
+    hostPath:
+      path: /var/lib/containers
+  - name: etcmachineid
+    hostPath:
+      path: /etc/machine-id
+      type: File
+
+daemonSetVolumeMounts:
+  - name: varlog
+    mountPath: /var/log
+    readOnly: true
+  - name: varlibcontainers
+    mountPath: /var/lib/containers
+    readOnly: true
+  - name: etcmachineid
+    mountPath: /etc/machine-id
+    readOnly: true
+
+config:
+  inputs: |
+    [INPUT]
+        Name              tail
+        Path              /var/log/containers/*.log
+        Exclude_Path      /var/log/containers/*_logging_*.log
+        Parser            cri
+        Tag               kube.*
+        Mem_Buf_Limit     50MB
+        Skip_Long_Lines   On
+        Refresh_Interval  10
+
+  filters: |
+    [FILTER]
+        Name                kubernetes
+        Match               kube.*
+        Kube_URL            https://kubernetes.default.svc:443
+        Kube_Tag_Prefix     kube.var.log.containers.
+        Merge_Log           Off
+        Keep_Log            On
+        K8S-Logging.Parser  On
+        K8S-Logging.Exclude On
+        Labels              Off
+        Annotations         Off
+
+  outputs: |
+    [OUTPUT]
+        Name              opensearch
+        Match             kube.*
+        Host              search-nsse-logs-wdjwwodm5ufuly6haadrpro3vq.us-east-1.es.amazonaws.com
+        Port              443
+        TLS               On
+        AWS_Auth          On
+        AWS_Region        us-east-1
+        Index             nsse-logs
+        Suppress_Type_Name On
+        Retry_Limit       3
+        Buffer_Size       False

@@ -1,0 +1,129 @@
+kube_state_metrics:
+  enabled: true
+
+daemonset:
+  enabled: true
+
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      memory: 256Mi
+
+  extraEnvs:
+    - name: NODE_NAME
+      valueFrom:
+        fieldRef:
+          fieldPath: spec.nodeName
+    - name: NODE_IP
+      valueFrom:
+        fieldRef:
+          fieldPath: status.hostIP
+    - name: OPENSEARCH_PASSWORD
+      valueFrom:
+        secretKeyRef:
+          name: opensearch-credentials
+          key: password
+
+  metricbeatConfig:
+    metricbeat.yml: |
+      metricbeat.config.modules:
+        path: ${path.config}/modules.d/*.yml
+        reload.enabled: false
+
+      metricbeat.modules:
+        - module: kubernetes
+          enabled: true
+          metricsets:
+            - container
+            - node
+            - pod
+            - system
+            - volume
+          period: 30s
+          host: "${NODE_NAME}"
+          hosts: ["https://${NODE_IP}:10250"]
+          bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token
+          ssl.verification_mode: "none"
+
+        - module: system
+          period: 30s
+          metricsets:
+            - cpu
+            - load
+            - memory
+            - network
+            - process
+            - process_summary
+          processes: [".*"]
+          process.include_top_n:
+            by_cpu: 5
+            by_memory: 5
+
+      processors:
+        - add_cloud_metadata: {}
+        - add_host_metadata: {}
+
+      output.elasticsearch:
+        hosts: ["https://search-nsse-logs-wdjwwodm5ufuly6haadrpro3vq.us-east-1.es.amazonaws.com:443"]
+        username: "admin"
+        password: "${OPENSEARCH_PASSWORD}"
+        ssl.verification_mode: "none"
+
+      setup.ilm.enabled: false
+      setup.template.enabled: true
+      setup.template.overwrite: true
+      setup.template.settings:
+        index.number_of_replicas: 0
+
+deployment:
+  enabled: true
+
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      memory: 256Mi
+
+  extraEnvs:
+    - name: OPENSEARCH_PASSWORD
+      valueFrom:
+        secretKeyRef:
+          name: opensearch-credentials
+          key: password
+
+  metricbeatConfig:
+    metricbeat.yml: |
+      metricbeat.modules:
+        - module: kubernetes
+          enabled: true
+          metricsets:
+            - state_node
+            - state_deployment
+            - state_daemonset
+            - state_replicaset
+            - state_statefulset
+            - state_pod
+            - state_container
+            - state_cronjob
+            - state_resourcequota
+            - state_service
+            - state_persistentvolume
+            - state_persistentvolumeclaim
+            - state_storageclass
+          period: 30s
+          hosts: ["kube-state-metrics.observability.svc.cluster.local:8080"]
+
+      output.elasticsearch:
+        hosts: ["https://search-nsse-logs-wdjwwodm5ufuly6haadrpro3vq.us-east-1.es.amazonaws.com:443"]
+        username: "admin"
+        password: "${OPENSEARCH_PASSWORD}"
+        ssl.verification_mode: "none"
+
+      setup.ilm.enabled: false
+      setup.template.enabled: true
+      setup.template.overwrite: true
+      setup.template.settings:
+        index.number_of_replicas: 0

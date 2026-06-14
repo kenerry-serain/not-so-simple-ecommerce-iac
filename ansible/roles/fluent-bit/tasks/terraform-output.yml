@@ -1,0 +1,11 @@
+---
+- name: Terraform Output (observability)
+  shell: terraform output -json > /tmp/terraform-observability-outputs.json
+  args:
+    chdir: "{{terraform_path}}/observability"
+  delegate_to: localhost
+  become: false
+  environment:
+    AWS_REGION: "{{aws_region}}"
+    AWS_ACCESS_KEY: "{{aws_access_key}}"
+    AWS_SECRET_ACCESS_KEY: "{{aws_secret_access_key}}"
