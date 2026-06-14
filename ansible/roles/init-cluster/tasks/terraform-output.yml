@@ -1,9 +1,10 @@
 ---
 - name: Terraform Output
-  shell: terraform output -json > outputs.json
+  shell: terraform output -json > /tmp/terraform-server-outputs.json
   args:
     chdir: "{{terraform_path}}/server"
   delegate_to: localhost
+  become: false
   environment:
     AWS_REGION: "{{aws_region}}"
     AWS_ACCESS_KEY: "{{aws_access_key}}"

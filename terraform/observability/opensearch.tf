@@ -35,8 +35,6 @@ resource "aws_opensearch_domain" "logs" {
     }
   }
 
-  # Principal: * é necessário quando se usa internal user database com FGAC.
-  # O FGAC é a camada real de autenticação — sem ele esta policy daria acesso livre.
   access_policies = jsonencode({
     Version = "2012-10-17"
     Statement = [{

@@ -114,7 +114,7 @@ deployment:
             - state_persistentvolumeclaim
             - state_storageclass
           period: 30s
-          hosts: ["kube-state-metrics.observability.svc.cluster.local:8080"]
+          hosts: ["metricbeat-kube-state-metrics.observability.svc.cluster.local:8080"]
 
       output.elasticsearch:
         hosts: ["https://{{ opensearch_endpoint }}:443"]

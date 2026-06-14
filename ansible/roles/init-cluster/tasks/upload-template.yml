@@ -1,7 +1,7 @@
 ---
 - name: Copy Template File
   vars:
-    terraform_outputs: "{{ lookup('file', '{{terraform_path}}/server/outputs.json') }}"
+    terraform_outputs: "{{ lookup('file', '/tmp/terraform-server-outputs.json') }}"
     nlb_dns_name: "{{ terraform_outputs.nlb_dns_name.value }}"
   template:
     src: kubeadm-init.yml

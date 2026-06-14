@@ -1,6 +1,6 @@
 output "opensearch_endpoint" {
   value       = aws_opensearch_domain.logs.endpoint
-  description = "Endpoint do domínio OpenSearch — usar como Host no Fluent Bit (sem https://)"
+  description = "Endpoint do domínio OpenSearch"
 }
 
 output "opensearch_dashboards_url" {

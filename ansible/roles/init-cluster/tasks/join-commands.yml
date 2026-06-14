@@ -12,9 +12,11 @@
     content: "{{ join_command_output.stdout }}--control-plane --certificate-key {{ certificate_key_output.stdout }}"
     dest: /tmp/kubeadm-join-control-plane.txt
   delegate_to: localhost
+  become: false
 
 - name: Write Worker Join Command to File
   copy:
     content: "{{ join_command_output.stdout }}"
     dest: /tmp/kubeadm-join-worker.txt
   delegate_to: localhost
+  become: false

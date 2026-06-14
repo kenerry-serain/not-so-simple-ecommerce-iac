@@ -19,6 +19,11 @@ variable "opensearch_master_password" {
   sensitive = true
 }
 
+variable "node_instance_role" {
+  type    = string
+  default = "nsse-production-instance-role"
+}
+
 variable "opensearch" {
   type = object({
     domain_name    = string
@@ -33,9 +38,4 @@ variable "opensearch" {
     instance_type  = "t3.medium.search"
     volume_size    = 20
   }
-}
-
-variable "node_instance_role" {
-  type    = string
-  default = "nsse-production-instance-role"
 }
