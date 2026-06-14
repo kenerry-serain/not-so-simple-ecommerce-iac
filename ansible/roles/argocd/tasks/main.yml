@@ -1,5 +1,11 @@
 ---
 - name: Installing ArgoCD
   shell: |
-    kubectl create namespace argocd
-    kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
+    kubectl create namespace argocd --dry-run=client -o yaml | kubectl apply -f -
+    kubectl apply --server-side --force-conflicts -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
+
+- name: Installing Argo Rollouts
+  shell: |
+    kubectl create namespace argo-rollouts --dry-run=client -o yaml | kubectl apply -f -
+    kubectl apply -n argo-rollouts -f https://github.com/argoproj/argo-rollouts/releases/latest/download/install.yaml
+    kubectl -n argo-rollouts rollout status deploy/argo-rollouts --timeout=120s
